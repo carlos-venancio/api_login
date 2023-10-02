@@ -1,8 +1,5 @@
 'use strict'
 
-// imports necessários para funcionar
-const express = require('express');
-
 // cria o servidor com as configurações da aplicação
 const http = require('http');
 
