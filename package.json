@@ -1,0 +1,22 @@
+{
+  "name": "api_login",
+  "version": "1.0.0",
+  "description": "Um simples componente de login com email, senha e nome",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx nodemon ./bin/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "debug": "^4.3.4",
+    "express": "^4.18.2",
+    "http": "^0.0.1-security",
+    "mongoose": "^7.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
