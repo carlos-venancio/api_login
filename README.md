@@ -6,7 +6,8 @@ Um simples componente de login com email, senha e nome
 ### teste - GET
 
 ~~~js
-GET   https://localhost:3000/teste
+GET
+https://localhost:3000/teste
 ~~~
 
 Informa se a api esta funcionando
