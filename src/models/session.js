@@ -26,4 +26,4 @@ const sesion = new Schema({
 });
 
 // pega ou cria a tabela 'sessions' de acordo com o esquema da variavel 'session' 
-module.exports = mongoose.model('sessions',sesion);
+module.exports = mongoose.model('Session',sesion);

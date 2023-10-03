@@ -11,7 +11,7 @@ app.set('port',port)
 const server = http.createServer(app);
 
 server.listen(port)
-console.log('Servidor rodando')
+console.log('Servidor rodando na porta ' + port)
 
 // FAZER
 

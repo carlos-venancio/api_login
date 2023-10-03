@@ -3,10 +3,9 @@
 const mongoose = require('mongoose')
 
 // classe que nos permite criar um modelo de tabela chamado de esquema
-const Schema = mongoose.Schema;
+const User = new mongoose.Schema({
 
-const user = new Schema({
-    name: {
+    username: {
         type: String,
         required: true,
         trim: true
@@ -17,12 +16,13 @@ const user = new Schema({
         unique: true,
         trim: true
     },
-    senha: {
+    password: {
         type: String,
         required: true,
         trim: true
     }
+
 });
 
 // pega ou cria a tabela 'users' de acordo com o esquema da variavel 'user' 
-module.exports = mongoose.model('users',user);
+module.exports = mongoose.model('user',User);
