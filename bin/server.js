@@ -1,8 +1,5 @@
 'use strict'
 
-// imports necessários para funcionar
-const express = require('express');
-
 // cria o servidor com as configurações da aplicação
 const http = require('http');
 
@@ -14,7 +11,7 @@ app.set('port',port)
 const server = http.createServer(app);
 
 server.listen(port)
-console.log('Servidor rodando')
+console.log('Servidor rodando na porta ' + port)
 
 // FAZER
 
