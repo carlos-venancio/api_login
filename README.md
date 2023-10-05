@@ -19,7 +19,7 @@ Enviar o email, nome e senha para poder criar uma conta. Uma sessão é criada a
 
 ### validarConta
 ~~~js
-GET - https://localhost:3000/:token
+GET - https://localhost:3000
 ~~~
 
 Valida se o usuário existe e está cadastrado no sistema. Uma sessão é criada automaticamente
