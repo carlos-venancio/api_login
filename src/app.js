@@ -1,22 +1,22 @@
 // CONEXÃO COM O BANCO
 
+const express = require('express');
+
 const mongoose = require('mongoose');
+
 // conecta no cluster e pega a coleção api_login
 mongoose.connect('mongodb+srv://api115:api115@cluster0.1inmp9b.mongodb.net/?retryWrites=true&w=majority',{
-    dbName: 'api_login'
+    dbName: 'api-login'
 })
 
 // teste de conexão com o banco 
 .then(() => console.log('Conectado ao banco'))
-.catch(err => err)
-
-
-
+.catch(err => console.log(err))
+.finally(() => console.log("passou pelo banco"))
 
 // CONFIGURAÇÃO DA API
 const bodyParser = require('body-parser');
 const cors = require('cors')
-const express = require('express');
 
 const app = express();
 

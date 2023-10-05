@@ -14,12 +14,7 @@ const sesion = new Schema({
         index: true,
         unique: true
     },
-    expirity: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    init: {
+    userId: {
         type: String,
         required: true
     }
