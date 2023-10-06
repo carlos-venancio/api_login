@@ -12,7 +12,6 @@ mongoose.connect('mongodb+srv://api115:api115@cluster0.1inmp9b.mongodb.net/?retr
 // teste de conexão com o banco 
 .then(() => console.log('Conectado ao banco'))
 .catch(err => console.log(err))
-.finally(() => console.log("passou pelo banco"))
 
 // CONFIGURAÇÃO DA API
 const bodyParser = require('body-parser');
