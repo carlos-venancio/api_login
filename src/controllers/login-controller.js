@@ -5,10 +5,16 @@
 const Token = require('../controllers/criptografar');
 const User = require('../models/users');
 const Session = require('../models/session');
+const {validarEmail, validarSenha, validarNome} = require('../controllers/condicoesCampos')
+
 
 exports.get = (req,res) => {
-
-    // validar dados 
+    if (!validarEmail(req.body.email) || !validarSenha(req.body.password)) {
+        return res.status(400).send({
+            status: 400,
+            message: 'Dados Inválidos'
+        });
+    }
 
     // pesquisar se existe o token e a sessão está ativa
     User.findOne({
@@ -48,8 +54,12 @@ exports.get = (req,res) => {
 
 exports.post =  (req,res) => {
 
-    // validação dos dados 
-    
+    if (!validarNome(req.body.username) || !validarEmail(req.body.email) || !validarSenha(req.body.password)) {
+        return res.status(400).send({
+            status: 400,
+            message: 'Dados inválidos'
+        });
+    }
 
     // inserindo os dados no banco
     const user  = new User({
