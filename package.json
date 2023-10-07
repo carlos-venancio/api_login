@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Um simples componente de login com email, senha e nome",
   "main": "index.js",
-  "enginers": {
-     "node": "18"
+  "engines": {
+     "node": "18.18"
   }
   "scripts": {
     "start": "npx nodemon ./bin/server.js"
