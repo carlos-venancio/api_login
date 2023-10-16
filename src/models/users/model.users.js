@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 // classe que nos permite criar um modelo de tabela chamado de esquema
 const User = new mongoose.Schema({
-
+    // atributos do modelo do usuário
     username: {
         type: String,
         required: true,

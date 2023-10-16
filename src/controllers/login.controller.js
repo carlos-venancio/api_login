@@ -3,15 +3,14 @@
 const insertUser  = require('../models/users/insert.users')
 const insertSession = require('../models/session/insert.session')
 
+// realiza o login consultando o usuario e retonando o token
 exports.get = async (req,res) => {
-    
     
     try {
         // validar dados 
-        
         const userSelected = await insertUser.queryUsuario(req.query)
         
-        // valida o usuario
+        // lança um erro caso o usuário não for encontrado
         if (userSelected == null) throw new Error('Usuário não encontrado')
 
         const token = await insertSession.registerToken(userSelected._id,userSelected.email,"Logado com sucesso!");
@@ -28,7 +27,6 @@ exports.get = async (req,res) => {
 
 exports.post =  async (req,res) => {
 
-    
     try {
         // validar dos dados 
         
@@ -41,10 +39,21 @@ exports.post =  async (req,res) => {
     }
 
     catch(e) {
-        res.status(500).send({
-            status: 500,
+
+        res.status(400).send({
+            status: 400,
             message: "Falha ao cadastrar",
-            error: e
+            error: e.message
         })
     }
 }
+
+// exports.put = (req,res,next) => {
+
+// }
+
+// // delete o token gerado
+// exports.delete = (req,res,next) => {
+
+// }
+

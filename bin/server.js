@@ -1,20 +1,11 @@
-'use strict'
-
-// cria o servidor com as configurações da aplicação
-const http = require('http');
-
 const app = require('../src/app')
-const port = 3000;
+const connect_bank = require('../src/connect_bank')
 
-app.set('port',port)
+connect_bank()
+ 
+// pega a porta 3000 caso não tenha nenhuma atribuida no deploy
+const port = 3000 || process.env.PORT
 
-const server = http.createServer(app);
-
-server.listen(port)
-console.log('Servidor rodando na porta ' + port)
-
-// FAZER
-
-// normalização de porta 
-// tratamento de erros
-// escuta
+app.listen(port,() => {
+    console.log('Servidor está rodando na porta' + port)
+})

@@ -20,12 +20,11 @@ async function queryUsuario(query){
         email: query.email,
         password: query.password
     })
-
-    console.log(userSelected)
+    
     return userSelected
 }
 
 module.exports = {
     saveUser,
     queryUsuario
-}
+} 
