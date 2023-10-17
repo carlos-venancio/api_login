@@ -11,7 +11,7 @@ async function saveUser(body){
     });
 
     // salva no banco o novo usuario
-   return await newUser.save()
+   return await newUser.save();
 }
 
 // consulta o usuario no banco
@@ -21,9 +21,18 @@ async function queryUsuario(query){
     const userSelected = await modelUser.findOne({
         email: query.email,
         password: query.password
-    })
+    });
     
-    return userSelected
+    return userSelected;
+}
+
+// consulta um usuario pelo id dele
+async function getUserById(id) {
+
+    // pega o usuario pelo id
+    const userSelected = await modelUser.findById(id); 
+
+    return userSelected;
 }
 
 module.exports = {

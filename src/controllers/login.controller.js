@@ -19,7 +19,10 @@ exports.get = async (req,res) => {
         if (userSelected == null) res.status(404).send({status: 404,message: 'Usuário não encontrado'})
 
         // registra a sessão
-        const token = await insertSession.registerToken(userSelected._id,userSelected.email,"Logado com sucesso!");
+        const token = await insertSession.registerToken(userSelected._id,userSelected.email, "Logado com sucesso!");
+
+        token.username = userSelected.username; 
+
         res.status(token.status).send(token);       
     }
 

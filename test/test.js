@@ -1,9 +1,25 @@
-var assert = require('assert');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const app = require('../src/app')
+const should = chai.should();
 
-describe('Array', function() {
-  describe('#indexOf()', function() {
-    it('should return -1 when the value is not present', function() {
-      assert.equal([1, 2, 3].indexOf(4), -1);
-    });
-  });
-});
+chai.use(chaiHttp);
+
+console.log(app)
+// testa se o servidor está online
+describe('Teste do servidor\n', () => {
+
+  describe('GET /', () => {
+      it('Testando se o servidor está online', () => {
+          const { status, body } = chai.request(app).get('/')
+          console.log(status,body)
+      })
+  })
+
+})
+
+// testa todas as rotas do login
+describe('Login', () => {
+
+
+})
