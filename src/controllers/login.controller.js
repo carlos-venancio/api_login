@@ -21,6 +21,7 @@ exports.get = async (req,res) => {
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email, "Logado com sucesso!");
 
+        // adiciona o usuario no retorno
         token.username = userSelected.username; 
 
         res.status(token.status).send(token);       

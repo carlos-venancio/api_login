@@ -37,5 +37,6 @@ async function getUserById(id) {
 
 module.exports = {
     saveUser,
-    queryUsuario
+    queryUsuario,
+    getUserById
 } 
