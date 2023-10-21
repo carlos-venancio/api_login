@@ -18,9 +18,9 @@ const login = require('./routes/login');
 const session = require('./routes/session')
 
 // configuração dos endpoints das rotas
-app.use('/v2',teste)
-app.use('/v2',login)
-app.use('/v2/session',session)
+app.use('/',teste)
+app.use('/',login)
+app.use('/session',session)
 
 // exporta o modulo app para poder fazer as outras configurações
 module.exports = app;
