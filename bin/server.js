@@ -1,8 +1,4 @@
 const app = require('../src/app')
-const connect_bank = require('../src/connect_bank')
-
-// conecta o banco de dados à api
-connect_bank();
  
 // pega a porta 3000 caso não tenha nenhuma atribuida no deploy
 const port = normalizePort(process.env.PORT || '3000' )

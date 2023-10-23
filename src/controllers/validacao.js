@@ -129,8 +129,12 @@ function validarTentativaDeInjecao(data){
     const values = Object.values(data)
 
     for(dado in values) {
-        if (String(values[dado]).includes('$')) throw new Error("Caracter inválido")    
+        // verifica se todos os parametros são legais e não tentativas de injeção 
+        if (String(values[dado]).includes('$')) throw new Error('Caracter inválido "$"')    
     }
 }
 
-module.exports = { validarTentativaDeInjecao, validarEmailAndSenhaAndNome };
+module.exports = { 
+    validarTentativaDeInjecao, 
+    validarEmailAndSenhaAndNome 
+};
