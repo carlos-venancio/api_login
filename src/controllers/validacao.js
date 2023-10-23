@@ -108,34 +108,29 @@ function validarNome(nome) {
     return '';
 }
 
-function validarEmailAndSenha(data) {
-
-    // executa a validação dos dados
-    const emailValidado = validarEmail(data.email || '');
-    const senhaValidada =  validarSenha(data.password || '');
-
-    // lança um erro caso o email for inválido
-    if (Boolean(emailValidado)) throw new Error(emailValidado);
-    
-    // lança um erro caso a senha for inválido
-    else if (Boolean(senhaValidada)) throw new Error(senhaValidada);
-}
-
 function validarEmailAndSenhaAndNome(data) {
 
     // executa a validação dos dados
+    const nomeValidado =  validarNome(data.username);
     const emailValidado = validarEmail(data.email);
     const senhaValidada =  validarSenha(data.password);
-    const nomeValidado =  validarNome(data.username);
 
     // lança um erro caso o email for inválido
     if (Boolean(emailValidado)) throw new Error(emailValidado);
-    
+
     // lança um erro caso a senha for inválido
     else if (Boolean(senhaValidada)) throw new Error(senhaValidada);
-    
+
     // lança um erro caso o nome for inválido
     else if (Boolean(nomeValidado)) throw new Error(nomeValidado);
 }
 
-module.exports = { validarEmailAndSenha, validarEmailAndSenhaAndNome };
+function validarTentativaDeInjecao(data){
+    const values = Object.values(data)
+
+    for(dado in values) {
+        if (String(values[dado]).includes('$')) throw new Error("Caracter inválido")    
+    }
+}
+
+module.exports = { validarTentativaDeInjecao, validarEmailAndSenhaAndNome };
