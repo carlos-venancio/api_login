@@ -1,22 +1,13 @@
-// CONEXÃO COM O BANCO
+'use strict'
 
+// configuração das rotas e parametros
 const express = require('express');
 
-const mongoose = require('mongoose');
-
-// conecta no cluster e pega a coleção api_login
-mongoose.connect('mongodb+srv://api115:api115@cluster0.1inmp9b.mongodb.net/?retryWrites=true&w=majority',{
-    dbName: 'api-login'
-})
-
-// teste de conexão com o banco 
-.then(() => console.log('Conectado ao banco'))
-.catch(err => console.log(err))
-.finally(() => console.log("passou pelo banco"))
-
-// CONFIGURAÇÃO DA API
 const bodyParser = require('body-parser');
 const cors = require('cors')
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swaggerConfig');
 
 const app = express();
 
@@ -24,12 +15,18 @@ const app = express();
 app.use(bodyParser.json())
 app.use(cors())
 
+//middleware do swagger ui
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // importação das rotas
 const teste = require('./routes/teste');
 const login = require('./routes/login');
+const session = require('./routes/session')
 
 // configuração dos endpoints das rotas
-app.use('/',teste)
-app.use('/',login)
+app.use('/v2',teste)
+app.use('/v2',login)
+app.use('/v2/session',session)
 
+// exporta o modulo app para poder fazer as outras configurações
 module.exports = app;
