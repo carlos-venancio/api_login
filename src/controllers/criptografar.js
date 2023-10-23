@@ -1,6 +1,9 @@
-const jwt = require('jsonwebtoken')
 
-const secretKey = 'api_login'
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+
+
+const secretKey = process.env.SECRET_KEY
 
 // gera um jwt usando o id e email
 function gerarToken(id,email) {

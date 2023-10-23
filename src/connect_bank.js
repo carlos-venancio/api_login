@@ -1,12 +1,14 @@
 // CONEXÃO COM O BANCO
 
+require('dotenv').config()
+
 const mongoose = require('mongoose');
 
 function connect() {
 
     // conecta no cluster e pega a coleção api_login
-    mongoose.connect('mongodb+srv://api115:api115@cluster0.1inmp9b.mongodb.net/?retryWrites=true&w=majority',{
-        dbName: 'api-login'
+    mongoose.connect(process.env.URL_CLUSTER,{
+        dbName: process.env.DATABASE
     })
     
     // confirmação de conexão com o banco 

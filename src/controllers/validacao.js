@@ -4,8 +4,7 @@ function validarSenha(senha) {
     if (senha == null){
         return "Informe uma senha"
     }
-    
-    
+     
     // verifica se a senha possui pelo menos 8 caracteres
     if (senha.length < 8) {
         return "A senha deve possuir pelo menos 8 caracteres";

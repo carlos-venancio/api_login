@@ -1,3 +1,4 @@
+require('dotenv').config()
 
 const modelUser = require('../models/model.users');
 
@@ -11,7 +12,7 @@ async function saveUser(body){
     });
 
     // gambiarra para testar a rota de cadastro
-    if(body.email === 'teste@teste.com') return newUser;
+    if(body.email === process.env.EMAIL_TESTE) return newUser;
 
     // salva no banco o novo usuario
    return await newUser.save();
