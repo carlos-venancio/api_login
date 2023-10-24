@@ -1,20 +1,21 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+// const app = require('../src/app')
+
 
 require('dotenv').config()
 
 chai.should();
 chai.use(chaiHttp);
 
-// executa a api especificada no endereço
-
+let contentToken;
 
 // testa a rota que diz se o servidor está online
 describe('/GET teste', () => {
 
   // o done é usado para indicar o final do teste e evitar que o mesmo se repita
     it('Deveria estar online', (done) => {
-        chai.request('http://localhost:3000')
+      chai.request('http://localhost:3000')
           .get('/')
           .end((err,res) => {
               // testa se o status é igual a 200
@@ -28,7 +29,7 @@ describe('/GET teste', () => {
 describe('/GET usuario', () => {
     
   it('Deveria consultar o usuário',  (done) => {
-        chai.request('http://localhost:3000')
+    chai.request('http://localhost:3000')
           .get('/login')
           .query({
             email: process.env.EMAIL_TESTE,
@@ -43,7 +44,7 @@ describe('/GET usuario', () => {
                 res.body.should.have.property('token');
                 res.body.should.have.property('status').eql('200');
                 res.body.should.have.property('username');
-                global.token = res.body.token;
+                contentToken = res.body.token;
               }
 
             done();
@@ -55,8 +56,7 @@ describe('/GET usuario', () => {
 // testa a rota de cadastro do usuario 
 describe('/POST usuario', () => {
    
-  it('Deveria cadastrar o usuário (apenas simula)', (done) => {
-    
+  it('Deveria cadastrar o usuário (apenas simula)', (done) => {    
     chai.request('http://localhost:3000')
       .post('/')
       .send({
@@ -68,13 +68,11 @@ describe('/POST usuario', () => {
         
           if (res.statusCode != '201') console.log(res.body)
           
-          else {
-            res.body.should.have.property('token');
-            res.body.should.have.property('status').eql('201');
-            res.body.should.have.property('username');
-            global.token = res.body.token;
-          }
-
+          
+          res.body.should.have.property('token');
+          res.body.should.have.property('status').eql('201');
+          res.body.should.have.property('username');
+          
         done();
       })
 
@@ -87,18 +85,16 @@ describe('/POST session', () => {
       chai.request('http://localhost:3000')
         .post('/session/refresh')
         .send({
-          token: global.token
+          token: contentToken
         })
         .end((err,res) => {
-          
+
           if (res.statusCode != '201') console.log(res.body)
           
           res.statusCode.should.equal(201)
           res.body.should.have.property('token');
           res.body.should.have.property('status').eql('201');
-          res.body.should.have.property('username');
-          global.token = res.body.token;
-          
+          res.body.should.have.property('username');          
           done();
       })
     })

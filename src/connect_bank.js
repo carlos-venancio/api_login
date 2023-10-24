@@ -4,7 +4,7 @@ require('dotenv').config()
 
 const mongoose = require('mongoose');
 
-function connect() {
+async function connect() {
 
     // conecta no cluster e pega a coleção api_login
     mongoose.connect(process.env.URL_CLUSTER,{
@@ -16,7 +16,6 @@ function connect() {
     
     // exibição de possivel erro
     .catch(err => console.log(err))
-    
 }
 
 module.exports = connect;

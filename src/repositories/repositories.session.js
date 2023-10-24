@@ -20,7 +20,6 @@ async function registerToken (id,email) {
     return tokenGerado
 }
 
-
 module.exports = {
     registerToken,
 }

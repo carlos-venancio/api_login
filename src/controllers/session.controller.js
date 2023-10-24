@@ -18,6 +18,7 @@ exports.refresh = async (req,res) => {
         
         // consulta o usuario para pegar o nome
         const user = await getUserById(data.userId);
+        console.log(user)
 
         res.status(201).send(
             sucessResponse(201,token,user.username,"Token recarregado")

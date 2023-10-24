@@ -7,10 +7,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 
 const app = express();
-const connect_bank = require('../src/connect_bank')
 
-// conecta o banco de dados à api
-connect_bank();
+console.log('Teste')
 
 // converte por padrão o corpo da requisição
 app.use(bodyParser.json())
