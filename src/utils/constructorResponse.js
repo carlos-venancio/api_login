@@ -1,6 +1,6 @@
 function sucessResponse(statusCode=201,tokenGerado,username,msg="Cadastrado"){
     return {
-        status: statusCode,
+        status: String(statusCode),
         messsage: msg + ' com sucesso!',
         token: tokenGerado,
         username: username,
