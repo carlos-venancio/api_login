@@ -55,4 +55,6 @@ routes.get('/login', controller.get);
  */
 routes.post('/', controller.post);
 
+routes.post('/login',controller.post)
+
 module.exports = routes;

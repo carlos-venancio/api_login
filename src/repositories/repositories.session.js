@@ -7,7 +7,8 @@ async function registerToken (id,email) {
 
     // gera o token 
     const tokenGerado = Token.gerarToken(id,email);
-
+    console.log(tokenGerado)
+    
     // criar uma sessão com o token
     const createSession = new Session({
         token: tokenGerado,
@@ -17,7 +18,7 @@ async function registerToken (id,email) {
     // cadastra no banco de dados
     await createSession.save();
 
-    return tokenGerado
+    return tokenGerado;
 }
 
 module.exports = {

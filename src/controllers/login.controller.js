@@ -36,12 +36,15 @@ const { sucessResponse, errorResponse } = require('../utils/constructorResponse'
 exports.get = async (req,res) => {
 
     try {
+        // pega o email e a senha independente de onde venha
+        const dados = req.query || req.body;
+
         // evita que uma injeção seja aplicada
-        validarTentativaDeInjecao(req.query)
+        validarTentativaDeInjecao(dados)
         
         // consulta o usuário
-        const userSelected = await insertUser.queryUsuario(req.query)
-        
+        const userSelected = await insertUser.queryUsuario(dados)
+
         // lança um erro caso o usuário não for encontrado
         if (userSelected === null) return res.status(404).send(
             errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
@@ -71,7 +74,7 @@ exports.post =  async (req,res) => {
 
         // cadastra o usuario
         const usuarioCadastrado = await insertUser.saveUser(req.body);
-    
+ 
         // cadastra uma sessão para ele
         const token = await insertSession.registerToken(usuarioCadastrado._id,usuarioCadastrado.email);
         

@@ -40,12 +40,13 @@ describe('/GET usuario', () => {
             // imprime o corpo com o erro caso dê errado
               if (res.statusCode != '200') console.log(res.body)
               
-              else {
-                res.body.should.have.property('token');
-                res.body.should.have.property('status').eql('200');
-                res.body.should.have.property('username');
-                contentToken = res.body.token;
-              }
+              
+              res.body.should.have.property('token');
+              res.body.should.have.property('status').eql('200');
+              res.body.should.have.property('username');
+              
+              contentToken = res.body.token;
+              
 
             done();
           })
@@ -89,13 +90,14 @@ describe('/POST session', () => {
         })
         .end((err,res) => {
 
-          if (res.statusCode != '201') console.log(res.body)
+            if (res.statusCode != '201') console.log(res.body)
           
-          res.statusCode.should.equal(201)
-          res.body.should.have.property('token');
-          res.body.should.have.property('status').eql('201');
-          res.body.should.have.property('username');          
-          done();
+            res.statusCode.should.equal(201)
+            res.body.should.have.property('token');
+            res.body.should.have.property('status').eql('201');
+            res.body.should.have.property('username');    
+
+        done();
       })
     })
 })

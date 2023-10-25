@@ -11,8 +11,6 @@ const swaggerSpec = require('./swaggerConfig');
 
 const app = express();
 
-console.log('Teste')
-
 // converte por padrão o corpo da requisição
 app.use(bodyParser.json())
 app.use(cors())

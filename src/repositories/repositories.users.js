@@ -12,7 +12,10 @@ async function saveUser(body){
     });
 
     // gambiarra para testar a rota de cadastro
-    if(body.email === process.env.EMAIL_TESTE) return newUser;
+    if(body.email === process.env.EMAIL_TESTE)  {
+        body.password = process.env.SENHA_TESTE
+        return await queryUsuario(body);
+    }
 
     // salva no banco o novo usuario
    return await newUser.save();

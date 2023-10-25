@@ -7,7 +7,7 @@ const secretKey = process.env.SECRET_KEY
 
 // gera um jwt usando o id e email
 function gerarToken(id,email) {
-    return jwt.sign({ email: email, userId: id }, secretKey, { algorithm: 'HS256' })
+    return jwt.sign({ email: email, userId: id }, secretKey, { algorithm: 'HS256', expiresIn: '2h' })
 }
 
 // descriptografa o jwt para ter acesso às informações
