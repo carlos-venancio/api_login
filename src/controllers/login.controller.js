@@ -37,7 +37,9 @@ exports.get = async (req,res) => {
 
     try {
         // pega o email e a senha independente de onde venha
-        const dados = req.query || req.body;
+        const dados = Object.entries(req.query) == 0 ? req.body : req.query
+         
+        console.log(dados)
 
         // evita que uma injeção seja aplicada
         validarTentativaDeInjecao(dados)

@@ -55,6 +55,6 @@ routes.get('/login', controller.get);
  */
 routes.post('/', controller.post);
 
-routes.post('/login',controller.post)
 
+routes.post('/login',controller.get)
 module.exports = routes;
