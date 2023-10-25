@@ -12,7 +12,6 @@ function gerarToken(id,email) {
 
 // descriptografa o jwt para ter acesso às informações
 function descriptografar(token) {
-
     const data = jwt.verify(token,secretKey,(error,decoded) => {
         // retorna o json descriptogarfado ou o erro
         if (!decoded) throw new Error(error.message)

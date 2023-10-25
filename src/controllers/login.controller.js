@@ -5,6 +5,33 @@ const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
 const { sucessResponse, errorResponse } = require('../utils/constructorResponse')
 
+/**
+ * @swagger
+ * /login:
+ *   get:
+ *     tags:
+ *       - Authentication
+ *     description: Realiza o login do usuário e retorna o token.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: email
+ *         in: query
+ *         required: true
+ *         type: string
+ *       - name: senha
+ *         in: query
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Logado com sucesso
+ *       404:
+ *         description: Usuário não encontrado
+ *       400:
+ *         description: Falha ao consultar
+ */
+
 // realiza o login consultando o usuario e retonando o token
 exports.get = async (req,res) => {
 

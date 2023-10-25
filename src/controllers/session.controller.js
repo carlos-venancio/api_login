@@ -3,6 +3,32 @@ const { getUserById } = require('../repositories/repositories.users')
 const { descriptografar } = require('./criptografar');
 const { sucessResponse, errorResponse } = require('../utils/constructorResponse')
 
+/**
+ * @swagger
+ * /refresh-token:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     description: Cria um novo token a partir do existente.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: token
+ *         in: body
+ *         description: Token existente para ser renovado.
+ *         required: true
+ *         schema:
+ *           type: object
+ *           properties:
+ *             token:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Token renovado com sucesso
+ *       400:
+ *         description: Falha ao renovar o token
+ */
+
 // cria um novo token apartir do existente
 exports.refresh = async (req,res) => {
 

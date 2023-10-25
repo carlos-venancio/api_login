@@ -6,6 +6,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors')
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swaggerConfig');
+
 const app = express();
 
 console.log('Teste')
@@ -13,6 +16,9 @@ console.log('Teste')
 // converte por padrão o corpo da requisição
 app.use(bodyParser.json())
 app.use(cors())
+
+//middleware do swagger ui
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // importação das rotas
 const teste = require('./routes/teste');
