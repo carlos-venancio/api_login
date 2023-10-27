@@ -16,7 +16,10 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['src/routes/*.js', 'src/controllers/*.js'], // caminho dos arquivos que contêm a documentação da API
+  apis: ['src/routes/*.js', //caminho dos arquivos dentro da pasta routes
+         'src/controllers/*.js'//caminho dos arquivos dentro da pasta controllers
+         
+  ], // caminho dos arquivos que contêm a documentação da API
 };
 
 const swaggerSpec = swaggerJSDoc(options);
