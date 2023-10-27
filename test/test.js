@@ -8,8 +8,6 @@ require('dotenv').config()
 chai.should();
 chai.use(chaiHttp);
 
-let contentToken;
-
 // testa a rota que diz se o servidor está online
 describe('/GET teste', () => {
 
@@ -18,7 +16,6 @@ describe('/GET teste', () => {
       chai.request('http://localhost:3000')
           .get('/')
           .end((err,res) => {
-              // testa se o status é igual a 200
               res.statusCode.should.equal(200)
             done();
           })
@@ -40,14 +37,10 @@ describe('/GET usuario', () => {
             // imprime o corpo com o erro caso dê errado
               if (res.statusCode != '200') console.log(res.body)
               
-              
               res.body.should.have.property('token');
               res.body.should.have.property('status').eql('200');
               res.body.should.have.property('username');
               
-              contentToken = res.body.token;
-              
-
             done();
           })
           
@@ -63,12 +56,12 @@ describe('/POST usuario', () => {
       .send({
         username:"AAAA",
         email: process.env.EMAIL_TESTE,
+        // A senha não é funcional pois apenas a regra para senhas
         password: '12345@Aa'
       })
       .end((err,res) => {
         
           if (res.statusCode != '201') console.log(res.body)
-          
           
           res.body.should.have.property('token');
           res.body.should.have.property('status').eql('201');
@@ -86,7 +79,7 @@ describe('/POST session', () => {
       chai.request('http://localhost:3000')
         .post('/session/refresh')
         .send({
-          token: contentToken
+          token: process.env.TOKEN_TESTE
         })
         .end((err,res) => {
 

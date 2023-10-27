@@ -3,7 +3,10 @@
 const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao } = require('./validacao')
 const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
-const { sucessResponse, errorResponse } = require('../utils/constructorResponse')
+
+// 
+const { sucessResponse, errorResponse } = require('../utils/constructorResponse');
+const logger = require('../utils/logger')
 
 /**
  * @swagger
@@ -36,21 +39,26 @@ const { sucessResponse, errorResponse } = require('../utils/constructorResponse'
 exports.get = async (req,res) => {
 
     try {
+        
         // pega o email e a senha independente de onde venha
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
-         
-        console.log(dados)
+        logger.info('Logando o usuario ' + dados.email)
 
-        // evita que uma injeção seja aplicada
+        
         validarTentativaDeInjecao(dados)
+
+
         
         // consulta o usuário
         const userSelected = await insertUser.queryUsuario(dados)
 
         // lança um erro caso o usuário não for encontrado
-        if (userSelected === null) return res.status(404).send(
+        if (!userSelected) return res.status(404).send(
             errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
         )
+
+        logger.info('Usuario encontrado!')
+
 
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
@@ -72,7 +80,10 @@ exports.post =  async (req,res) => {
 
     try {
         // validação dos dados 
-        validarEmailAndSenhaAndNome(req.body)
+        const errorData = validarEmailAndSenhaAndNome(req.body);
+        if (errorData) res.status(400).send(
+            errorResponse(400,'validar os dados',{message:errorData})
+        )
 
         // cadastra o usuario
         const usuarioCadastrado = await insertUser.saveUser(req.body);
@@ -87,7 +98,7 @@ exports.post =  async (req,res) => {
 
     catch(e) {
         // formata mensagem para caso o usuário já existir
-        if (e.message.includes('E11000')) e.message = "Email já está em uso";
+       if (e.message.includes('E11000') & e.message.toLowerCase().includes('email')) e.message = "Email já está em uso";
         
         res.status(500).send(
             errorResponse(500,'consultar',e)

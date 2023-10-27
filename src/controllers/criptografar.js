@@ -2,12 +2,11 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
-
 const secretKey = process.env.SECRET_KEY
 
 // gera um jwt usando o id e email
 function gerarToken(id,email) {
-    return jwt.sign({ email: email, userId: id }, secretKey, { algorithm: 'HS256', expiresIn: '2h' })
+    return jwt.sign({ email: email, userId: id, startDate: new Date().toLocaleString() }, secretKey, { algorithm: 'HS256', expiresIn: '2h' })
 }
 
 // descriptografa o jwt para ter acesso às informações

@@ -115,13 +115,13 @@ function validarEmailAndSenhaAndNome(data) {
     const senhaValidada =  validarSenha(data.password);
 
     // lança um erro caso o email for inválido
-    if (Boolean(emailValidado)) throw new Error(emailValidado);
+    if (Boolean(emailValidado)) return emailValidado;
 
     // lança um erro caso a senha for inválido
-    else if (Boolean(senhaValidada)) throw new Error(senhaValidada);
+    else if (Boolean(senhaValidada)) return senhaValidada;
 
     // lança um erro caso o nome for inválido
-    else if (Boolean(nomeValidado)) throw new Error(nomeValidado);
+    else if (Boolean(nomeValidado)) return nomeValidado;
 }
 
 function validarTentativaDeInjecao(data){
@@ -129,7 +129,7 @@ function validarTentativaDeInjecao(data){
 
     for(dado in values) {
         // verifica se todos os parametros são legais e não tentativas de injeção 
-        if (String(values[dado]).includes('$')) throw new Error('Caracter inválido "$"')    
+        if (String(values[dado]).includes('$')) return 'Caracter inválido "$"'    
     }
 }
 

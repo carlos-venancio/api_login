@@ -34,7 +34,10 @@ exports.refresh = async (req,res) => {
 
     try {
         // descriptografa o token para ter acesso aos dados
-        
+        if (!req.body.token) return res.status(400).send(
+                errorResponse(400,'validar o token',{message: 'Insira um token para recarregar'})
+            )
+
         const data = descriptografar(req.body.token);
         console.log(data)
         
@@ -43,7 +46,6 @@ exports.refresh = async (req,res) => {
         
         // consulta o usuario para pegar o nome
         const user = await getUserById(data.userId);
-        console.log(user)
 
         res.status(201).send(
             sucessResponse(201,token,user.username,"Token recarregado")
