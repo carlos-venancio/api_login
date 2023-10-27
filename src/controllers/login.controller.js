@@ -43,7 +43,6 @@ exports.get = async (req,res) => {
         // pega o email e a senha independente de onde venha
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
         logger.info('Logando o usuario ' + dados.email)
-
         
         validarTentativaDeInjecao(dados)
 

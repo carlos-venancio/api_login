@@ -12,8 +12,6 @@ app.listen(port,() => {
     console.log('Servidor está rodando na porta ' + port)
 })
 
-
-
 // ---- TRATAMENTOS -----
 
 // configura uma resposta para caso dê um erro no servidor
@@ -29,12 +27,12 @@ app.on('error',(error) => {
 
     switch(error.code) {
         case 'EACCES': 
-            console.error(bind + "requires elevated privigiles");
+            console.error(bind + "É necessário um privéligio maior");
             process.exit(1);
             break;
             
         case 'EADDRINUSE': 
-            console.error(bind + "is already in use");
+            console.error(bind + "Já está em uso");
             process.exit(1);
             break;
         

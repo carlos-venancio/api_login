@@ -37,7 +37,6 @@ async function getUserById(id) {
 
     // pega o usuario pelo id
     const userSelected = await modelUser.findById(id); 
-    console.log(userSelected)
 
     return userSelected;
 }

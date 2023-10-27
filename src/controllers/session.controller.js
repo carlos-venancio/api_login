@@ -35,16 +35,15 @@ exports.refresh = async (req,res) => {
     try {
         // descriptografa o token para ter acesso aos dados
         if (!req.body.token) return res.status(400).send(
-                errorResponse(400,'validar o token',{message: 'Insira um token para recarregar'})
+                errorResponse(400,'validar o token',new Error('Insira um token para recarregar'))
             )
 
         const data = descriptografar(req.body.token);
-        console.log(data)
         
         // inserindo denovo no banco
         const token = await registerToken(data.userId,data.email);
         
-        // consulta o usuario para pegar o nome
+        // consultando o usuario para pegar o nome
         const user = await getUserById(data.userId);
 
         res.status(201).send(

@@ -1,0 +1,24 @@
+config: 
+    target: 'http://localhost:3000'
+    phases: 
+        - duration: 10
+          arrivalRate: 10
+scenarios:
+    - flow: 
+        - get:
+            url: '/'
+        - post:
+            url: '/'
+            json: 
+                username: 'Beater'
+                email: 'teste@teste.com'
+                password: '123454@aA'
+        - post: 
+            url: '/login'
+            json: 
+                email: 'teste@teste.com'
+                password: '1234'   
+        - post: 
+            url: '/session/refresh'
+            json: 
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpYW5lQHRlc3RlLmNvbSIsInVzZXJJZCI6IjY1MjA3ZmY3YTUwZmRhZGY5ZDFlNTZlMSIsImlhdCI6MTY5NjYyODcyN30.O5TljNd0t8NzrZXm_NH0M_e8tL66hE6Fs0F-eYT9dN4'
