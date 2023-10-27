@@ -1,16 +1,17 @@
-const pino = require('pino')({
-    level: 'error',
-    // formatter
-});
-;
+const pino = require('pino-http')({
 
-// const formatter = pino.transport({
-//     target: 'pino-pretty',
-//     options: {
-//         colorize: true,
-//         levelFirst: true
-//     }
-// })
+        customLogLevel: function (req, res, err) {
+            if (res.statusCode >= 400 && res.statusCode < 500) {
+            return 'warn'
+            } else if (res.statusCode >= 500 || err) {
+            return 'error'
+            } else if (res.statusCode >= 300 && res.statusCode < 400) {
+            return 'silent'
+            }
+            return 'info'
+        },
+    }
+);
 
 // configurações do registro de log
 

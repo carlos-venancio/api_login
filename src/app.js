@@ -5,15 +5,16 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swaggerConfig');
+const logger = require('pino-http')
 
 const app = express();
 
-// converte por padrão o corpo da requisição
-app.use(bodyParser.json());
+// configurações das requisições feitas a API
+app.use(bodyParser.json()); // converte por padrão o corpo da requisição
 app.use(cors());
+app.use(logger())
 
 
 // importação das rotas

@@ -3,10 +3,7 @@
 const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao } = require('./validacao')
 const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
-
-// 
 const { sucessResponse, errorResponse } = require('../utils/constructorResponse');
-const logger = require('../utils/logger')
 
 /**
  * @swagger
@@ -42,11 +39,8 @@ exports.get = async (req,res) => {
         
         // pega o email e a senha independente de onde venha
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
-        logger.info('Logando o usuario ' + dados.email)
         
         validarTentativaDeInjecao(dados)
-
-
         
         // consulta o usuário
         const userSelected = await insertUser.queryUsuario(dados)
@@ -56,12 +50,10 @@ exports.get = async (req,res) => {
             errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
         )
 
-        logger.info('Usuario encontrado!')
-
-
+        
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
-
+        
         res.status(200).send(
             sucessResponse(200,token,userSelected.username,'Logado')
         );       
@@ -101,7 +93,6 @@ exports.post =  async (req,res) => {
         
         res.status(500).send(
             errorResponse(500,'consultar',e)
-        )
-        
+        ) 
     }
 }
