@@ -1,6 +1,7 @@
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const secretKey = process.env.SECRET_KEY
 
@@ -21,7 +22,20 @@ function descriptografar(token) {
     return data
 }
 
+const salt = 10
+
+async function criptografarSenha(senha) {
+    return await bcrypt.genSalt(salt, (saltGenerate) => {
+        bcrypt.hash(senha,saltGenerate)
+    })
+}
+
+function descriptografarSenha(senha) {
+    return bcrypt.compareSync(senha,salt);
+}
+
 module.exports = {
     gerarToken,
-    descriptografar
+    descriptografar,
+    criptografarSenha
 }
