@@ -46,11 +46,19 @@ exports.get = async (req,res) => {
         // consulta o usuário
         const userSelected = await insertUser.queryUsuario(dados)
 
-        // lança um erro caso o email e a senha não forém válidos
-        if (!(userSelected && validarSenha(dados.password,userSelected.password))) return res.status(404).send(
-            errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
-        )
+        // lança um erro caso o email não for cadastrado
+        if (!userSelected) return res.status(404).send(
+                errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
+            )
+        
+        // testa a senha dependendo 
+        const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenha(dados.password,userSelected.password)
 
+        // é verdadeiro caso a senha for válida e falso caso for inválida 
+        if (!senhaValida) return res.status(404).send(
+                errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
+        )
+                
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
         
