@@ -43,6 +43,7 @@ exports.refresh = async (req,res) => {
         // inserindo denovo no banco
         const token = await registerToken(data.userId,data.email);
         
+        
         // consultando o usuario para pegar o nome
         const user = await getUserById(data.userId);
 

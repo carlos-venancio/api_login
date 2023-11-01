@@ -73,7 +73,7 @@ describe('/POST login', () => {
 })
 
 // testa a rota de cadastro do usuario 
-describe('/POST usuario', () => {
+describe('/POST cadastro', () => {
    
   it('Deveria cadastrar o usuário (apenas simula)', (done) => {    
     chai.request('http://localhost:3000')

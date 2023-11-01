@@ -4,6 +4,7 @@ const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao } = require('./va
 const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
 const { sucessResponse, errorResponse } = require('../utils/constructorResponse');
+const { validarSenha } = require('../controllers/criptografar')
 
 /**
  * @swagger
@@ -45,12 +46,11 @@ exports.get = async (req,res) => {
         // consulta o usuário
         const userSelected = await insertUser.queryUsuario(dados)
 
-        // lança um erro caso o usuário não for encontrado
-        if (!userSelected) return res.status(404).send(
+        // lança um erro caso o email e a senha não forém válidos
+        if (!(userSelected && validarSenha(dados.password,userSelected.password))) return res.status(404).send(
             errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
         )
 
-        
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
         

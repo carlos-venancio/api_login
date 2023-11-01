@@ -22,20 +22,17 @@ function descriptografar(token) {
     return data
 }
 
-const salt = 10
-
-async function criptografarSenha(senha) {
-    return await bcrypt.genSalt(salt, (saltGenerate) => {
-        bcrypt.hash(senha,saltGenerate)
-    })
+function hashSenha(senha) {
+    return bcrypt.hashSync(senha, 10)  // Gera uma cadeia de caracteres aleatorios baseado no tamanho do salt, 10 no caso 
 }
 
-function descriptografarSenha(senha) {
-    return bcrypt.compareSync(senha,salt);
+function validarSenha(senhaDigitada, senhaArmazenada) {
+    return bcrypt.compareSync(senhaDigitada,senhaArmazenada);
 }
 
 module.exports = {
     gerarToken,
     descriptografar,
-    criptografarSenha
+    hashSenha,
+    validarSenha
 }

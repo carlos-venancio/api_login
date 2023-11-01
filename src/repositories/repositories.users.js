@@ -1,3 +1,4 @@
+const { hashSenha } = require('../controllers/criptografar')
 require('dotenv').config()
 
 const modelUser = require('../models/model.users');
@@ -8,7 +9,7 @@ async function saveUser(body){
     const newUser  = new modelUser({
         username: body.username,
         email: body.email,
-        password: body.password
+        password: hashSenha(body.password) // senha criptografada com hash
     });
 
     // gambiarra para testar a rota de cadastro, pois finge cadastrar
@@ -21,12 +22,11 @@ async function saveUser(body){
 }
 
 // consulta o usuario no banco
-async function queryUsuario(query){
+async function queryUsuario(data){
 
     // consulta o usuário no banco
     const userSelected = await modelUser.findOne({
-        email: query.email,
-        password: query.password
+        email: data.email
     });
     
     return userSelected;
