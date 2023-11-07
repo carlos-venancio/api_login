@@ -76,4 +76,6 @@ routes.post('/', controller.post);
 routes.post('/login',controller.get)
 
 
+routes.post('/login/social', controller.loginSocial)
+
 module.exports = routes;
