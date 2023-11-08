@@ -5,24 +5,6 @@ const routes = express.Router();
 
 /**
  * @swagger
- * /login:
- *   get:
- *     tags:
- *       - Login
- *     description: Obtém informações da página de login ou qualquer outra ação relacionada.
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: Sucesso ao obter informações da página de login
- *       400:
- *         description: Erro ao obter informações
- */
-
-routes.get('/login', controller.get);
-
-/**
- * @swagger
  * /:
  *   post:
  *     tags:

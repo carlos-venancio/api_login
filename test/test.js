@@ -23,31 +23,6 @@ describe('/GET teste', () => {
 })
 
 // testa a rota de consulta do usuario
-describe('/GET login', () => {
-    
-  it('Deveria consultar o usuário',  (done) => {
-    chai.request('http://localhost:3000')
-          .get('/login')
-          .query({
-            email: process.env.EMAIL_TESTE,
-            password: process.env.SENHA_TESTE
-          })
-          .end((err,res) => {
-
-            // imprime o corpo com o erro caso dê errado
-              if (res.statusCode != '200') console.log(res.body)
-              
-              res.body.should.have.property('token');
-              res.body.should.have.property('status').eql('200');
-              res.body.should.have.property('username');
-              
-            done();
-          })
-          
-    })
-})
-
-// testa a rota de consulta do usuario
 describe('/POST login', () => {
     
   it('Deveria consultar o usuário',  (done) => {

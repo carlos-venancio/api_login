@@ -126,11 +126,12 @@ exports.loginSocial = async (req,res) => {
         )
 
         // verifica se o usuario existe no banco 
-        const user = await insertUser.queryUsuario(data);
+        let user = await insertUser.queryUsuario(data);
 
         // cadastra o usuario caso não esteja cadastrado
         if (!user) {
-            user = insertUser.saveUser({
+
+            user = await insertUser.saveUser({
                 username: data.name,
                 email: data.email,
                 password: data.sub
@@ -140,16 +141,20 @@ exports.loginSocial = async (req,res) => {
             const token = await insertSession.registerToken(user._id,user.email);
             
             res.status(201).send(
-                sucessResponse(201,token,userSelected.username)
+                sucessResponse(201,token,user.username)
             );  
         }
 
         // válida e loga
         else {
 
-            if (validarSenha(data.sub,user.password)) res.status(200).send(
-                sucessResponse(200,token,userSelected.username,'Logado')
-            );
+            if (validarSenha(data.sub,user.password)) {
+                    
+                const token = await insertSession.registerToken(user._id,user.email);
+                        res.status(200).send(
+                        sucessResponse(200,token,user.username,'Logado')
+                    );
+                }
 
             else return res.status(404).send(
                 errorResponse(400,'verificar o usuário',new Error('Usuário de mídia inválido'))

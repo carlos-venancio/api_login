@@ -5,7 +5,7 @@ const connect_bank = require('../src/connect_bank')
 connect_bank()
 
 // pega a porta 3000 caso não tenha nenhuma atribuida no deploy
-const port = normalizePort(process.env.PORT || '3000' )
+const port = normalizePort(process.env.PORT || '3001' )
 
 // configura a porta onde estará a aplicação
 app.listen(port,() => {
