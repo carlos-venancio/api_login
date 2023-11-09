@@ -116,9 +116,7 @@ exports.loginSocial = async (req,res) => {
 
     try {
 
-        // descriptografa o token para acessar os dados de login da midia 
-        const data =  jwtDecode(req.body.token)
-
+        const data = req.body;
 
         // retorna um erro caso o usuário não esteja autorizado
         if (!data.email_verified) return res.status(404).send(
