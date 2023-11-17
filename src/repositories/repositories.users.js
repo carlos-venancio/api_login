@@ -41,6 +41,14 @@ async function getUserById(id) {
     return userSelected;
 }
 
+async function deleteUser(id) {
+
+    // procura um usuário e deleta ele
+    const userDeleted = await modelUser.findOneAndDelete(id);
+
+    return userDeleted;
+}
+
 module.exports = {
     saveUser,
     queryUsuario,

@@ -5,7 +5,7 @@ const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
 const { sucessResponse, errorResponse } = require('../utils/constructorResponse');
 const { validarSenha } = require('../controllers/criptografar')
-const { jwtDecode } = require('jwt-decode')
+const { descriptografar } = require('./criptografar')
 
 /**
  * @swagger
@@ -46,7 +46,6 @@ exports.get = async (req,res) => {
             errorResponse(400,'validar os dados',{message:errorData})
         )
         
-
         // consulta o usuário
         const userSelected = await insertUser.queryUsuario(dados)
 
@@ -164,6 +163,22 @@ exports.loginSocial = async (req,res) => {
 
         res.status(500).send(
             errorResponse(500,'logar usuário',e)
+        )
+    }
+}
+
+exports.delete = (req,res,next) => {
+
+    try {
+        
+        // descriptografa o token do usuario para pegar o ID 
+        const token = descriptografar(req.body.token);
+
+    }
+
+    catch(e) {
+        res.status(500).send(
+            errorResponse(500,'deletar o usuario',e)
         )
     }
 }

@@ -60,4 +60,6 @@ routes.post('/login',controller.get)
 
 routes.post('/login/social', controller.loginSocial)
 
+routes.delete('/login', controller.delete)
+
 module.exports = routes;
