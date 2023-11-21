@@ -21,7 +21,6 @@ const User = new mongoose.Schema({
         required: true,
         trim: true
     }
-
 });
 
 // pega ou cria a tabela 'users' de acordo com o esquema da variavel 'user' 

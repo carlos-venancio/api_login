@@ -125,12 +125,11 @@ function validarEmailAndSenhaAndNome(data) {
 }
 
 function validarTentativaDeInjecao(data){
-    const values = Object.values(data)
+    // verifica se todos os parametros são legais e não tentativas de injeção 
+    const values = Object.values(data).filter((dado) => String(dado).includes === '$')
 
-    for(dado in values) {
-        // verifica se todos os parametros são legais e não tentativas de injeção 
-        if (String(values[dado]).includes('$')) return 'Caracter inválido "$"'    
-    }
+    return values > 0 ? 'Caracter inválido "$"' : ""    
+    
 }
 
 module.exports = { 

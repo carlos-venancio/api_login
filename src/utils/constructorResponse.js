@@ -8,9 +8,16 @@ function sucessResponse(statusCode=201,tokenGerado,username,msg="Cadastrado"){
     }
 }
 
-function errorResponse(statusCode=500,msg='consultar',e){
+function simpleResponse(status,message){
     return {
-        status: statusCode,
+        status,
+        message
+    }
+}
+
+function errorResponse(status=500,msg='consultar',e){
+    return {
+        status,
         message: "Falha ao " + msg,
         error: e.message
     }
@@ -18,5 +25,6 @@ function errorResponse(statusCode=500,msg='consultar',e){
 
 module.exports = {
     sucessResponse,
-    errorResponse
+    errorResponse,
+    simpleResponse
 }

@@ -44,7 +44,9 @@ async function getUserById(id) {
 async function deleteUser(id) {
 
     // procura um usuário e deleta ele
-    const userDeleted = await modelUser.findOneAndDelete(id);
+    const userDeleted = await modelUser.findOneAndDelete({
+        _id: id
+    });
 
     return userDeleted;
 }
@@ -52,5 +54,6 @@ async function deleteUser(id) {
 module.exports = {
     saveUser,
     queryUsuario,
-    getUserById
+    getUserById,
+    deleteUser
 } 

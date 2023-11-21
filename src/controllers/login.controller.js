@@ -3,9 +3,10 @@
 const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao } = require('./validacao')
 const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
-const { sucessResponse, errorResponse } = require('../utils/constructorResponse');
+const { sucessResponse, errorResponse, simpleResponse } = require('../utils/constructorResponse');
 const { validarSenha } = require('../controllers/criptografar')
 const { descriptografar } = require('./criptografar')
+const { enviarEmailRedefinirSenha } = require('../utils/enviarEmail')
 
 /**
  * @swagger
@@ -13,7 +14,7 @@ const { descriptografar } = require('./criptografar')
  *   get:
  *     tags:
  *       - Authentication
- *     description: Realiza o login do usuário e retorna o token.
+ *     description: Realiza o login do usuário e' retorna o token.
  *     produces:
  *       - application/json
  *     parameters:
@@ -42,6 +43,8 @@ exports.get = async (req,res) => {
         // pega o email e a senha independente de onde venha
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
         
+        const errorData = validarTentativaDeInjecao(dados);
+
         if (validarTentativaDeInjecao(dados)) res.status(400).send(
             errorResponse(400,'validar os dados',{message:errorData})
         )
@@ -54,16 +57,13 @@ exports.get = async (req,res) => {
                 errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
             )
         
-
-
-        // testa a senha dependendo 
+        // testa a senha dependendo se esta criptografada ou não 
         const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenha(dados.password,userSelected.password)
 
         // é verdadeiro caso a senha for válida e falso caso for inválida 
         if (!senhaValida) return res.status(404).send(
                 errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
         )
-
                 
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
@@ -111,6 +111,7 @@ exports.post =  async (req,res) => {
     }
 }
 
+// rota que permite o login ou cadastrado com a conta do google
 exports.loginSocial = async (req,res) => {
 
     try {
@@ -162,23 +163,58 @@ exports.loginSocial = async (req,res) => {
     catch(e) {
 
         res.status(500).send(
-            errorResponse(500,'logar usuário',e)
+            errorResponse(500,'entrar com o google',e)
         )
     }
 }
 
-exports.delete = (req,res,next) => {
+// deleta um usuario do sistema
+exports.delete = async (req,res) => {
 
     try {
         
         // descriptografa o token do usuario para pegar o ID 
         const token = descriptografar(req.body.token);
 
+        // deleta o usuário do sistema
+        await insertUser.deleteUser(token.userId);
+
+        res.status(204)        
     }
 
     catch(e) {
         res.status(500).send(
             errorResponse(500,'deletar o usuario',e)
-        )
+        );
     }
 }
+
+exports.recuperarSenha = async (req,res) => {
+    
+    try {
+
+        // pega o email que deseja 
+        const userSelected = await insertUser.queryUsuario(req.body);
+
+        if (!userSelected) res.status(404).send(
+            errorResponse(404,'encontrar usuario',new Error('Usuário não encontrado'))
+        )
+
+        // adicionar codigo para recuperação no registro do usuario
+        
+
+        // envia email com o codigo de recuperação
+        await enviarEmailRedefinirSenha(userSelected)
+
+        res.status(200).send(
+            simpleResponse(200,'Email para recuperação enviado')
+        )
+    }
+
+    catch(e) {
+        res.status(500).send(
+            errorResponse(500,'recuperar a senha',e.message)
+        );
+    }
+}
+

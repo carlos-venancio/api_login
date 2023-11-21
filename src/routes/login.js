@@ -57,9 +57,10 @@ routes.post('/', controller.post);
 
 routes.post('/login',controller.get)
 
-
 routes.post('/login/social', controller.loginSocial)
 
 routes.delete('/login', controller.delete)
+
+routes.post('/recuperarSenha', controller.recuperarSenha)
 
 module.exports = routes;
