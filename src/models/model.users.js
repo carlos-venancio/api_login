@@ -20,6 +20,11 @@ const User = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    recoveryCode: {
+        type: String,
+        unique: true,
+        default: 'null'
     }
 });
 

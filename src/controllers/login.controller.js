@@ -1,8 +1,9 @@
 'use strict';
 
-const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao } = require('./validacao')
+const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao, validarExistenciaUsuario } = require('./validacao')
 const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
+const insertResetPass = require('../repositories/repositories.resetPassToken');
 const { sucessResponse, errorResponse, simpleResponse } = require('../utils/constructorResponse');
 const { validarSenha } = require('../controllers/criptografar')
 const { descriptografar } = require('./criptografar')
@@ -11,7 +12,7 @@ const { enviarEmailRedefinirSenha } = require('../utils/enviarEmail')
 /**
  * @swagger
  * /login:
- *   get:
+ *   post:
  *     tags:
  *       - Authentication
  *     description: Realiza o login do usuário e' retorna o token.
@@ -50,20 +51,13 @@ exports.get = async (req,res) => {
         )
         
         // consulta o usuário
-        const userSelected = await insertUser.queryUsuario(dados)
-
-        // lança um erro caso o email não for cadastrado
-        if (!userSelected) return res.status(404).send(
-                errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
-            )
+        const userSelected = await validarExistenciaUsuario(token);
         
         // testa a senha dependendo se esta criptografada ou não 
         const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenha(dados.password,userSelected.password)
 
         // é verdadeiro caso a senha for válida e falso caso for inválida 
-        if (!senhaValida) return res.status(404).send(
-                errorResponse(404,'encontra usuario',new Error('Usuário não encontrado'))
-        )
+        if (!senhaValida) return new Error('Usuário não encontrado')
                 
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
@@ -81,11 +75,12 @@ exports.get = async (req,res) => {
 }
 
 // realiza o cadastro do usuario e retorna o token da sessão
-exports.post =  async (req,res) => {
+exports.post = async (req,res) => {
 
     try {
         // validação dos dados 
         const errorData = validarEmailAndSenhaAndNome(req.body);
+
         if (errorData) res.status(400).send(
             errorResponse(400,'validar os dados',{message:errorData})
         )
@@ -176,10 +171,12 @@ exports.delete = async (req,res) => {
         // descriptografa o token do usuario para pegar o ID 
         const token = descriptografar(req.body.token);
 
-        // deleta o usuário do sistema
-        await insertUser.deleteUser(token.userId);
+        const user = await validarExistenciaUsuario(token);
 
-        res.status(204)        
+        // deleta o usuário do sistema
+        await insertUser.deleteUser(user._id);
+
+        res.status(204).send()       
     }
 
     catch(e) {
@@ -189,22 +186,19 @@ exports.delete = async (req,res) => {
     }
 }
 
+// inseri um code de recuperação no banco de dados
 exports.recuperarSenha = async (req,res) => {
     
     try {
 
-        // pega o email que deseja 
-        const userSelected = await insertUser.queryUsuario(req.body);
-
-        if (!userSelected) res.status(404).send(
-            errorResponse(404,'encontrar usuario',new Error('Usuário não encontrado'))
-        )
+        // pega o email que deseja validar
+        const userSelected = await validarExistenciaUsuario(req.body)
 
         // adicionar codigo para recuperação no registro do usuario
-        
-
+        const recoveryCode = await insertUser.insertRecoveryCode(userSelected._id);
+ 
         // envia email com o codigo de recuperação
-        await enviarEmailRedefinirSenha(userSelected)
+        await enviarEmailRedefinirSenha(userSelected.email, recoveryCode)
 
         res.status(200).send(
             simpleResponse(200,'Email para recuperação enviado')
@@ -213,8 +207,73 @@ exports.recuperarSenha = async (req,res) => {
 
     catch(e) {
         res.status(500).send(
-            errorResponse(500,'recuperar a senha',e.message)
+            errorResponse(500,'enviar email de recuperação de senha',e.message)
         );
     }
 }
 
+// valida se o recoveryCode é válido e gera um token caso for
+exports.validarRecoveryCode = async (req,res) => {
+    
+    try {
+
+        // espera um email
+        const userSelect = await validarExistenciaUsuario(req.body);
+        
+        // valida o codigo de verificação
+        if (req.body.recoveryCode == userSelect.recoveryCode){
+            
+            // limpa o codigo de recuperação
+            await insertUser.clearRecoveryCode(userSelect._id);
+
+            // cadastra um token para para ele
+            const token = await insertResetPass.registerToken(userSelect._id,userSelect.email);
+       
+            res.status(200).send({
+                status: 200,
+                token
+            });  
+        }
+
+        else {
+            res.status(400).send(
+                simpleResponse(400, 'código incorreto')
+            );
+        }
+    }
+
+    catch(e) {
+        console.log()
+        res.status(500).send(
+            errorResponse(500,'validar código de senha',e.message)
+        );
+    }
+}
+
+// muda a senha no banco de dados
+exports.cadastrarNovaSenha = async (req,res) => {
+    
+    try {
+        
+        // valida se o token foi gerado
+        const validateToken = await insertResetPass.getToken(req.body.token);
+
+        if(Boolean(validateToken)) {
+
+            // criptografar a senha
+            // validar a senha
+            await insertUser.updatePassword(validateToken.userId, req.body.password);
+            
+            res.status(200).send(
+                simpleResponse(200,"sucesso ao alterar a senha")
+            )
+        }
+    }
+
+    catch(e) {
+        console.log(e)
+        res.status(500).send(
+            errorResponse(500,'validar código de senha',e.message)
+        );
+    }
+}

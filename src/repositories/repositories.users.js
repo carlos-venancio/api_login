@@ -1,4 +1,6 @@
 const { hashSenha } = require('../controllers/criptografar')
+const { generateArrayRandomUnit } = require('../utils/generateRandom')
+
 require('dotenv').config()
 
 const modelUser = require('../models/model.users');
@@ -41,6 +43,7 @@ async function getUserById(id) {
     return userSelected;
 }
 
+// deleta um usuario pelo id
 async function deleteUser(id) {
 
     // procura um usuário e deleta ele
@@ -51,9 +54,52 @@ async function deleteUser(id) {
     return userDeleted;
 }
 
+// inseri um recoveryCode
+async function insertRecoveryCode(id) {
+
+    // quantidade de caracteres gerados
+    const amountCode = 6;
+
+    // gera o codigo de recuperação
+    const newRecoveryCode = generateArrayRandomUnit(amountCode);
+    
+    // atualiza o codigo de recuperação
+    await modelUser.findByIdAndUpdate(id,{recoveryCode: newRecoveryCode});
+    
+    return newRecoveryCode;
+}
+
+// limpa o codigo de recuperação
+async function clearRecoveryCode(id) {
+    
+    // reseta o recoveryCode para null
+    await modelUser.findByIdAndUpdate(id,{
+        recoveryCode:'null'
+    },
+    {
+        new: true
+    });
+
+    return 
+}
+
+// atualiza a senha
+async function updatePassword(id,newPassword) {
+
+    // inseri a nova senha
+    await modelUser.findByIdAndUpdate(id, {
+        password: newPassword
+    })
+
+    return
+}
+
 module.exports = {
     saveUser,
     queryUsuario,
     getUserById,
-    deleteUser
+    deleteUser,
+    insertRecoveryCode,
+    clearRecoveryCode,
+    updatePassword
 } 

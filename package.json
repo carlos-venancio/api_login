@@ -7,8 +7,9 @@
     "node": "18.18"
   },
   "scripts": {
-    "start": "npx nodemon ./bin/server.js",
-    "test": "npx mocha"
+    "start": "node ./bin/server.js",
+    "test": "npx mocha",
+    "dev":"npx nodemon ./bin/server.js"
   },
   "keywords": [],
   "author": "",

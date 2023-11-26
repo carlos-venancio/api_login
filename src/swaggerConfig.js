@@ -5,11 +5,11 @@ const swaggerDefinition = {
   info: {
     title: 'API Login',
     version: '1.0.0',
-    description: 'documentação api login'
+    description: 'Documentação da api de login'
   },
   servers: [
     {
-      url: 'http://localhost:3000',
+      url: 'http://localhost:3001',
     },
   ],
 };
