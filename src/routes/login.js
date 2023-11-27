@@ -45,7 +45,7 @@ routes.post('/', controller.post);
  *   post:
  *     tags:
  *       - Login
- *     description: Obtém informações da página de login ou qualquer outra ação relacionada.
+ *     description: Cadastra um usuario
  *     produces:
  *       - application/json
  *     responses:
@@ -61,6 +61,10 @@ routes.post('/login/social', controller.loginSocial)
 
 routes.delete('/login', controller.delete)
 
-routes.post('/recuperarSenha', controller.recuperarSenha)
+routes.patch('/recuperarSenha', controller.recuperarSenha)
+
+routes.post('/recuperarSenha/validar', controller.validarRecoveryCode)
+
+routes.patch('/recuperarSenha/novaSenha', controller.cadastrarNovaSenha)
 
 module.exports = routes;

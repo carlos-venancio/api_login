@@ -14,7 +14,7 @@ const app = express();
 // configurações das requisições feitas a API
 app.use(bodyParser.json()); // converte por padrão o corpo da requisição
 app.use(cors());
-app.use(logger())
+// app.use(logger())
 
 
 // importação das rotas

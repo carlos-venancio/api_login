@@ -1,3 +1,8 @@
+'use strict'
+
+const insertUser = require('../repositories/repositories.users');
+const { errorResponse } = require('../utils/constructorResponse')
+
 function validarSenha(senha) {
 
     // verifica se a senha foi passado 
@@ -61,11 +66,6 @@ function validarEmail(email) {
         return "O email deve possuir o apenas um símbolo @";
     }
 
-    // verificar se o email contém apenas um .
-    if (email.indexOf(".") !== email.lastIndexOf(".")) {
-        return "O email deve possuir o apenas um símbolo .";
-    }
-
     // verificar se o email começa com o símbolo @
     if (email.indexOf("@") === 0) {
         return "O email não deve possuir começar com o símbolo @";
@@ -99,7 +99,7 @@ function validarNome(nome) {
 
     // verifica se o nome possui apenas letras
     const letras = /^[A-Za-z]+$/;
-    if (!letras.test(nome)) {
+    if (!letras.test(nome.replace(' ',''))) {
         return "O nome deve possuir apenas letras";
     }
 
@@ -132,7 +132,21 @@ function validarTentativaDeInjecao(data){
     
 }
 
+async function validarExistenciaUsuario(body){
+
+    console.log(body)
+    // pega o email que deseja validar
+    const userSelected = await insertUser.queryUsuario(body);
+    
+    if (!userSelected) {
+        throw new Error('Usuário não encontrado')
+    }
+
+    return userSelected;
+}
+
 module.exports = { 
     validarTentativaDeInjecao, 
-    validarEmailAndSenhaAndNome 
+    validarEmailAndSenhaAndNome,
+    validarExistenciaUsuario
 };
