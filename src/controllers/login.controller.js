@@ -45,20 +45,21 @@ exports.get = async (req,res) => {
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
         
         const errorData = validarTentativaDeInjecao(dados);
-
+        
         if (validarTentativaDeInjecao(dados)) res.status(400).send(
             errorResponse(400,'validar os dados',{message:errorData})
-        )
-        
-        // consulta o usuário
-        const userSelected = await validarExistenciaUsuario(token);
+            )
+            
+            // consulta o usuário
+        const userSelected = await validarExistenciaUsuario(dados);
         
         // testa a senha dependendo se esta criptografada ou não 
         const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenha(dados.password,userSelected.password)
-
+       
+        
         // é verdadeiro caso a senha for válida e falso caso for inválida 
         if (!senhaValida) return new Error('Usuário não encontrado')
-                
+        
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
         
@@ -220,14 +221,18 @@ exports.validarRecoveryCode = async (req,res) => {
         // espera um email
         const userSelect = await validarExistenciaUsuario(req.body);
         
+        console.log('testando codigo')
+        console.log("retornos:", req.body.recoveryCode == userSelect.recoveryCode)
         // valida o codigo de verificação
         if (req.body.recoveryCode == userSelect.recoveryCode){
             
             // limpa o codigo de recuperação
-            await insertUser.clearRecoveryCode(userSelect._id);
+            // await insertUser.clearRecoveryCode(userSelect._id);
 
+            console.log('registrando token')
             // cadastra um token para para ele
             const token = await insertResetPass.registerToken(userSelect._id,userSelect.email);
+            console.log('token registrado')
        
             res.status(200).send({
                 status: 200,
@@ -236,16 +241,18 @@ exports.validarRecoveryCode = async (req,res) => {
         }
 
         else {
+            console.log('codigo não passou')
             res.status(400).send(
                 simpleResponse(400, 'código incorreto')
-            );
-        }
+                );
+            }
+
     }
 
     catch(e) {
         console.log()
         res.status(500).send(
-            errorResponse(500,'validar código de senha',e.message)
+            errorResponse(500,'validar código de senha',e)
         );
     }
 }
