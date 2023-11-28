@@ -132,9 +132,8 @@ function validarTentativaDeInjecao(data){
     
 }
 
-async function validarExistenciaUsuario(body){
 
-    console.log(body)
+async function validarExistenciaUsuario(body){
     // pega o email que deseja validar
     const userSelected = await insertUser.queryUsuario(body);
     

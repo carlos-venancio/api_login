@@ -32,7 +32,6 @@ async function disablingActive(token){
 
     await resetPass.findOneAndUpdate({
         token: token,
-        active: true
     },
     {
         active: false
