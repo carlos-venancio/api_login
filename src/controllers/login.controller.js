@@ -53,7 +53,6 @@ exports.get = async (req,res) => {
             
         // consulta o usuário
         const userSelected = await validarExistenciaUsuario(dados);
-        const userSelected = await validarExistenciaUsuario(dados);
         
         // testa a senha dependendo se esta criptografada ou não 
         const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenhaCriptografada(dados.password,userSelected.password)
