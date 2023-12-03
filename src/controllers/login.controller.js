@@ -1,11 +1,12 @@
 'use strict';
 
-const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao, validarExistenciaUsuario } = require('./validacao')
+const { validarEmailAndSenhaAndNome, validarTentativaDeInjecao, validarExistenciaUsuario, validarSenha } = require('./validacao')
 const insertUser  = require('../repositories/repositories.users')
 const insertSession = require('../repositories/repositories.session')
 const insertResetPass = require('../repositories/repositories.resetPassToken');
+const insertUserSocial = require('../repositories/repositories.userSocial')
 const { sucessResponse, errorResponse, simpleResponse } = require('../utils/constructorResponse');
-const { validarSenha } = require('../controllers/criptografar')
+const { validarSenhaCriptografada } = require('../controllers/criptografar')
 const { descriptografar } = require('./criptografar')
 const { enviarEmailRedefinirSenha } = require('../utils/enviarEmail')
 
@@ -51,10 +52,10 @@ exports.get = async (req,res) => {
         )
         
         // consulta o usuário
-        const userSelected = await validarExistenciaUsuario(token);
+        const userSelected = await validarExistenciaUsuario(dados);
         
         // testa a senha dependendo se esta criptografada ou não 
-        const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenha(dados.password,userSelected.password)
+        const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenhaCriptografada(dados.password,userSelected.password)
 
         // é verdadeiro caso a senha for válida e falso caso for inválida 
         if (!senhaValida) return new Error('Usuário não encontrado')
@@ -68,6 +69,7 @@ exports.get = async (req,res) => {
     }
 
     catch(e) {
+        console.log(e)
         res.status(500).send(
             errorResponse(500,'consultar usuário',e)
         )
@@ -112,6 +114,8 @@ exports.loginSocial = async (req,res) => {
     try {
 
         const data = req.body;
+        let statusCode = 201;
+        const texto ='Cadastrado';
 
         // retorna um erro caso o usuário não esteja autorizado
         if (!data.email_verified) return res.status(404).send(
@@ -119,40 +123,28 @@ exports.loginSocial = async (req,res) => {
         )
 
         // verifica se o usuario existe no banco 
-        let user = await insertUser.queryUsuario(data);
+        let user = await insertUserSocial.queryUserSocial(data.email);
 
         // cadastra o usuario caso não esteja cadastrado
-        if (!user) {
-
-            user = await insertUser.saveUser({
-                username: data.name,
-                email: data.email,
-                password: data.sub
-            })
-
-            // registra a sessão
-            const token = await insertSession.registerToken(user._id,user.email);
-            
-            res.status(201).send(
-                sucessResponse(201,token,user.username)
-            );  
-        }
-
+        if (!user) user = await insertUserSocial.saveUserSocial(data.username,data.email,data.sub)
+        
         // válida e loga
         else {
+            if (validarSenhaCriptografada(data.sub,user.password)) {
+                statusCode = 200;
+                texto = 'Logado'
+            }        
 
-            if (validarSenha(data.sub,user.password)) {
-                    
-                const token = await insertSession.registerToken(user._id,user.email);
-                        res.status(200).send(
-                        sucessResponse(200,token,user.username,'Logado')
-                    );
-                }
-
-            else return res.status(404).send(
-                errorResponse(400,'verificar o usuário',new Error('Usuário de mídia inválido'))
-            )
+            else throw new Error('Usuário de mídia inválido')
         }
+            
+        // registra a sessão
+        const token = await insertSession.registerToken(user._id,user.email);
+        
+
+        res.status(statusCode).send(
+            sucessResponse(statusCode,token,user.username, texto)
+        );  
     }
 
     catch(e) {
@@ -206,8 +198,9 @@ exports.recuperarSenha = async (req,res) => {
     }
 
     catch(e) {
+        console.log(e.message)
         res.status(500).send(
-            errorResponse(500,'enviar email de recuperação de senha',e.message)
+            errorResponse(500,'enviar email de recuperação de senha',e)
         );
     }
 }
@@ -245,7 +238,7 @@ exports.validarRecoveryCode = async (req,res) => {
     catch(e) {
         console.log()
         res.status(500).send(
-            errorResponse(500,'validar código de senha',e.message)
+            errorResponse(500,'validar código de senha',e)
         );
     }
 }
@@ -257,23 +250,27 @@ exports.cadastrarNovaSenha = async (req,res) => {
         
         // valida se o token foi gerado
         const validateToken = await insertResetPass.getToken(req.body.token);
+        if(!validateToken) throw new Error('Token inválido')
 
-        if(Boolean(validateToken)) {
 
-            // criptografar a senha
-            // validar a senha
-            await insertUser.updatePassword(validateToken.userId, req.body.password);
-            
-            res.status(200).send(
-                simpleResponse(200,"sucesso ao alterar a senha")
-            )
-        }
+        // validação dos dados
+        const errorData = validarSenha(req.body.password);  
+        if (Boolean(errorData)) res.status(400).send(
+            errorResponse(400,'validar os dados',{message:errorData})
+        )
+
+        await insertUser.updatePassword(validateToken.userId, req.body.password);
+        
+        res.status(200).send(
+            simpleResponse(200,"sucesso ao alterar a senha")
+        )
+        
     }
 
     catch(e) {
         console.log(e)
         res.status(500).send(
-            errorResponse(500,'validar código de senha',e.message)
+            errorResponse(500,'validar código de senha',e)
         );
     }
 }

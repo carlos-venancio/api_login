@@ -22,35 +22,10 @@ describe('/GET teste', () => {
     })
 })
 
-// testa a rota de consulta do usuario
-describe('/POST login', () => {
-    
-  it('Deveria consultar o usuário',  (done) => {
-    chai.request('http://localhost:3000')
-          .post('/login')
-          .query({
-            email: process.env.EMAIL_TESTE,
-            password: process.env.SENHA_TESTE
-          })
-          .end((err,res) => {
-
-            // imprime o corpo com o erro caso dê errado
-              if (res.statusCode != '200') console.log(res.body)
-              
-              res.body.should.have.property('token');
-              res.body.should.have.property('status').eql('200');
-              res.body.should.have.property('username');
-              
-            done();
-          })
-          
-    })
-})
-
 // testa a rota de cadastro do usuario 
-describe('/POST cadastro', () => {
+describe('Login', () => {
    
-  it('Deveria cadastrar o usuário (apenas simula)', (done) => {    
+  it('/POST cadastro - Deveria cadastrar o usuário (apenas simula)', (done) => {    
     chai.request('http://localhost:3000')
       .post('/')
       .send({
@@ -71,11 +46,40 @@ describe('/POST cadastro', () => {
       })
 
   })
+
+  // testa a rota de consulta do usuario
+  it('/POST login - Deveria consultar o usuário',  (done) => {
+    chai.request('http://localhost:3000')
+          .post('/login')
+          .query({
+            email: process.env.EMAIL_TESTE,
+            password: process.env.SENHA_TESTE
+          })
+          .end((err,res) => {
+  
+            // imprime o corpo com o erro caso dê errado
+              if (res.statusCode != '200') console.log(res.body)
+              
+              res.body.should.have.property('token');
+              res.body.should.have.property('status').eql('200');
+              res.body.should.have.property('username');
+              
+            done();
+          })
+          
+    })
+
+
 })
 
+
+    
+
+
+
 // testar a rota recarregamento do token
-describe('/POST session', () => {
-    it('Deveria recarregar o token', (done) => {
+describe('Session', () => {
+    it('/POST session - Deveria recarregar o token', (done) => {
       chai.request('http://localhost:3000')
         .post('/session/refresh')
         .send({

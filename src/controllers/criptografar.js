@@ -25,7 +25,7 @@ function hashSenha(senha) {
     return bcrypt.hashSync(senha, 10)  // Gera uma cadeia de caracteres aleatorios baseado no tamanho do salt, 10 no caso 
 }
 
-function validarSenha(senhaDigitada, senhaArmazenada) {
+function validarSenhaCriptografada(senhaDigitada, senhaArmazenada) {
     return bcrypt.compareSync(senhaDigitada,senhaArmazenada);
 }
 
@@ -33,5 +33,5 @@ module.exports = {
     gerarToken,
     descriptografar,
     hashSenha,
-    validarSenha
+    validarSenhaCriptografada
 }

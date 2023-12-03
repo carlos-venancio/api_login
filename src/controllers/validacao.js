@@ -134,7 +134,6 @@ function validarTentativaDeInjecao(data){
 
 async function validarExistenciaUsuario(body){
 
-    console.log(body)
     // pega o email que deseja validar
     const userSelected = await insertUser.queryUsuario(body);
     
@@ -148,5 +147,6 @@ async function validarExistenciaUsuario(body){
 module.exports = { 
     validarTentativaDeInjecao, 
     validarEmailAndSenhaAndNome,
-    validarExistenciaUsuario
+    validarExistenciaUsuario,
+    validarSenha
 };

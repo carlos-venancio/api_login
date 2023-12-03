@@ -15,9 +15,9 @@ async function saveUser(body){
     });
 
     // gambiarra para testar a rota de cadastro, pois finge cadastrar
-    if(body.email === process.env.EMAIL_TESTE)  {
-        return newUser;
-    }
+    // if(body.email === process.env.EMAIL_TESTE)  {
+    //     return newUser;
+    // }
 
     // salva no banco o novo usuario
    return await newUser.save();
@@ -88,7 +88,7 @@ async function updatePassword(id,newPassword) {
 
     // inseri a nova senha
     await modelUser.findByIdAndUpdate(id, {
-        password: newPassword
+        password: hashSenha(newPassword) 
     })
 
     return
