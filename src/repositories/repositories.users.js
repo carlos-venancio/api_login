@@ -86,10 +86,11 @@ async function clearRecoveryCode(id) {
 // atualiza a senha
 async function updatePassword(id,newPassword) {
 
+    console.log(newPassword)
     // inseri a nova senha
     await modelUser.findByIdAndUpdate(id, {
         password: hashSenha(newPassword) 
-    })
+    }, { new: true })
 
     return
 }
