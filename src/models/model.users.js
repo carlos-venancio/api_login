@@ -22,8 +22,7 @@ const User = new mongoose.Schema({
         trim: true
     },
     lenPassword: {
-        type: Number,
-        required: true
+        type: Number
     },
     recoveryCode: {
         type: String,
