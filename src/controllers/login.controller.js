@@ -40,27 +40,30 @@ const { enviarEmailRedefinirSenha } = require('../utils/enviarEmail')
 // realiza o login consultando o usuario e retonando o token
 exports.get = async (req,res) => {
 
+    let statusCode = 500;
+
     try {
         
         // pega o email e a senha independente de onde venha
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
         
         const errorData = validarTentativaDeInjecao(dados);
-        
+
         if (validarTentativaDeInjecao(dados)) res.status(400).send(
             errorResponse(400,'validar os dados',{message:errorData})
         )
-            
+        
         // consulta o usuário
         const userSelected = await validarExistenciaUsuario(dados);
         
         // testa a senha dependendo se esta criptografada ou não 
         const senhaValida = userSelected.password[0] !== "$" ? userSelected.password === dados.password : validarSenhaCriptografada(dados.password,userSelected.password)
-       
-        
+
         // é verdadeiro caso a senha for válida e falso caso for inválida 
-        if (!senhaValida) return new Error('Usuário não encontrado')
-        
+        if (!senhaValida) {
+            statusCode = 400;
+            throw new Error('Usuário não encontrado')
+        }    
         // registra a sessão
         const token = await insertSession.registerToken(userSelected._id,userSelected.email);
         
@@ -71,8 +74,8 @@ exports.get = async (req,res) => {
 
     catch(e) {
         console.log(e)
-        res.status(500).send(
-            errorResponse(500,'consultar usuário',e)
+        res.status(statusCode).send(
+            errorResponse(statusCode,'consultar usuário',e)
         )
     }
 }
@@ -214,7 +217,7 @@ exports.validarRecoveryCode = async (req,res) => {
         // espera um email
         const userSelect = await validarExistenciaUsuario(req.body);
         
-       // valida o codigo de verificação
+        // valida o codigo de verificação
         if (req.body.recoveryCode == userSelect.recoveryCode){
             
             // limpa o codigo de recuperação
@@ -232,12 +235,12 @@ exports.validarRecoveryCode = async (req,res) => {
         else {
             res.status(400).send(
                 simpleResponse(400, 'código incorreto')
-                );
-            }
-
+            );
+        }
     }
 
     catch(e) {
+        console.log()
         res.status(500).send(
             errorResponse(500,'validar código de senha',e)
         );
@@ -249,22 +252,27 @@ exports.cadastrarNovaSenha = async (req,res) => {
     
     try {
         
-        // consulta o token foi gerado
+        // valida se o token foi gerado
         const validateToken = await insertResetPass.getToken(req.body.token);
+        if(!validateToken) throw new Error('Token inválido')
 
-        if(Boolean(validateToken)) {
 
-            // criptografar a senha
-            // validar a senha
-            await insertUser.updatePassword(validateToken.userId, req.body.password);
-            
-            res.status(200).send(
-                simpleResponse(200,"sucesso ao alterar a senha")
-            )
-        }
+        // validação dos dados
+        const errorData = validarSenha(req.body.password);  
+        if (Boolean(errorData)) res.status(400).send(
+            errorResponse(400,'validar os dados',{message:errorData})
+        )
+
+        await insertUser.updatePassword(validateToken.userId, req.body.password);
+        
+        res.status(200).send(
+            simpleResponse(200,"sucesso ao alterar a senha")
+        )
+        
     }
 
     catch(e) {
+        console.log(e)
         res.status(500).send(
             errorResponse(500,'validar código de senha',e)
         );
