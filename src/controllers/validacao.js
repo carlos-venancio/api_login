@@ -1,7 +1,7 @@
 'use strict'
 
 const insertUser = require('../repositories/repositories.users');
-const { errorResponse } = require('../utils/constructorResponse')
+
 
 function validarSenha(senha) {
 

@@ -11,7 +11,8 @@ async function saveUser(body){
     const newUser  = new modelUser({
         username: body.username,
         email: body.email,
-        password: hashSenha(body.password) // senha criptografada com hash
+        password: hashSenha(body.password), // senha criptografada com hash
+        lenPassword: body.password.length
     });
 
     // gambiarra para testar a rota de cadastro, pois finge cadastrar
@@ -89,7 +90,7 @@ async function updatePassword(id,newPassword) {
     // inseri a nova senha
     await modelUser.findByIdAndUpdate(id, {
         password: hashSenha(newPassword) 
-    })
+    }, { new: true })
 
     return
 }

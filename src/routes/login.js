@@ -67,4 +67,45 @@ routes.post('/recuperarSenha/validar', controller.validarRecoveryCode)
 
 routes.patch('/recuperarSenha/novaSenha', controller.cadastrarNovaSenha)
 
+/**
+ * @swagger
+ * /trocarSenha:
+ *   post:
+ *     tags:
+ *       - Login
+ *     description: Troca a senha de um usuario utilizando a antiga senha.
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         description: Informações do usuário para o login
+ *         schema:
+ *           type: object
+ *           required:
+ *             - token
+ *             - password
+ *             - newPassword
+ *           properties:
+ *             token:
+ *               type: string
+ *             password:
+ *               type: string
+ *             newPassword:
+ *               type: string
+
+ *     responses:
+ *       200:
+ *         description: Sucesso ao realizar o login
+ *       401:
+ *         description: Credenciais inválidas
+ *       400:
+ *         description: Requisição mal formatada
+ */
+
+routes.patch('/trocarSenha', controller.trocarSenha)
+
+routes.get('/infoUser', controller.infoUser)
+
 module.exports = routes;

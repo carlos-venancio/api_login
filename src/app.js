@@ -14,6 +14,7 @@ const app = express();
 // configurações das requisições feitas a API
 app.use(bodyParser.json()); // converte por padrão o corpo da requisição
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 // app.use(logger())
 
 
