@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node ./bin/server.js",
     "test": "npx mocha",
-    "dev":"npx nodemon ./bin/server.js"
+    "dev":"npx nodemon ./bin/server.js",
+    "testEmail":"node ./src/utils/enviarEmail.js"
   },
   "keywords": [],
   "author": "",
