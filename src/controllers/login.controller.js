@@ -5,7 +5,7 @@ const {
   validarTentativaDeInjecao,
   validarExistenciaUsuario,
   validarSenha,
-} = require("./validacao");
+} = require("./validacao.js");
 const insertUser = require("../repositories/repositories.users");
 const insertSession = require("../repositories/repositories.session");
 const insertResetPass = require("../repositories/repositories.resetPassToken");
@@ -55,15 +55,20 @@ exports.get = async (req, res) => {
     let statusCode = 500;
 
     try {
+
+        if (!req.body.password || !req.body.email) 
+          status = 400;
+          throw new Error('Informe uma senha e email!'); 
         
         // pega o email e a senha independente de onde venha
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
         
         const errorData = validarTentativaDeInjecao(dados);
 
-        if (validarTentativaDeInjecao(dados)) return es.status(400).send(
-            errorResponse(400,'validar os dados',{message:errorData})
-        )
+        if (errorData) {
+          statusCode = 400;
+          throw new Error(errorData);
+      } 
         
         // consulta o usuário
         const userSelected = await validarExistenciaUsuario(dados);
