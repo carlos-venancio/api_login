@@ -61,7 +61,7 @@ exports.get = async (req, res) => {
         
         const errorData = validarTentativaDeInjecao(dados);
 
-        if (validarTentativaDeInjecao(dados)) res.status(400).send(
+        if (validarTentativaDeInjecao(dados)) return es.status(400).send(
             errorResponse(400,'validar os dados',{message:errorData})
         )
         
@@ -94,14 +94,13 @@ exports.get = async (req, res) => {
 
 // realiza o cadastro do usuario e retorna o token da sessão
 exports.post = async (req, res) => {
+
+  
   try {
     // validação dos dados
     const errorData = validarEmailAndSenhaAndNome(req.body);
 
-    if (errorData)
-      res
-        .status(400)
-        .send(errorResponse(400, "validar os dados", { message: errorData }));
+    if (errorData) return res.status(400).send(errorResponse(400, "validar os dados", { message: errorData }))
 
     // cadastra o usuario
     const usuarioCadastrado = await insertUser.saveUser(req.body);
