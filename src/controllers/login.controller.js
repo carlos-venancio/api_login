@@ -56,10 +56,10 @@ exports.get = async (req, res) => {
 
     try {
 
-        if (!req.body.password || !req.body.email) 
+        if (!req.body.password || !req.body.email) {
           status = 400;
           throw new Error('Informe uma senha e email!'); 
-        
+        }
         // pega o email e a senha independente de onde venha
         const dados = Object.entries(req.query) == 0 ? req.body : req.query
         
