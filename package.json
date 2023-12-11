@@ -9,8 +9,8 @@
   "scripts": {
     "start": "node ./bin/server.js",
     "test": "npx mocha",
-    "dev":"npx nodemon ./bin/server.js",
-    "testEmail":"node ./src/utils/enviarEmail.js"
+    "dev": "npx nodemon ./bin/server.js",
+    "testEmail": "node ./src/utils/enviarEmail.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "debug": "^4.3.4",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "googleapis": "^129.0.0",
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
